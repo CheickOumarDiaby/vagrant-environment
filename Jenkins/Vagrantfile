@@ -1,0 +1,24 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Paramètre de la VM
+RAM       = 2048
+CPU       = 1
+HOSTNAME  = "jenkins"
+
+
+Vagrant.configure("2") do |config|
+  # image de base
+  config.vm.box = "geerlingguy/centos7"
+  # hostname de la VM
+  config.vm.hostname = HOSTNAME
+  # configuration système
+  config.vm.network "private_network", type: "dhcp" # Paramètre réseau
+  config.vm.provider "virtualbox" do |v| # Memoire RAM et CPU
+    v.memory = RAM
+    v.cpus = CPU
+  end
+
+  # Script d'installation de l'application
+  config.vm.provision "shell", path: "config/install_jenkins.sh"
+end

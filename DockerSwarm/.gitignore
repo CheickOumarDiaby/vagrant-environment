@@ -1,0 +1,3 @@
+# Vagrant directory
+.vagrant/
+*.log

@@ -1,0 +1,43 @@
+$script = <<-SCRIPT
+echo  Installation Prometheus and Grafana...
+docker stack deploy -c /vagrant/config/install_prom_grafana.yml prometheus_grafana
+SCRIPT
+
+
+Vagrant.configure('2') do |config|
+  vm_box = 'ubuntu/xenial64'
+  
+  config.vm.define :manager, primary: true  do |manager|
+      manager.vm.box = vm_box
+      manager.vm.box_check_update = true
+      manager.vm.network :private_network, ip: "10.100.199.200"
+      manager.vm.network :forwarded_port, guest: 3000, host: 3000
+      manager.vm.network :forwarded_port, guest: 9090, host: 9090
+      manager.vm.hostname = "manager"
+      manager.vm.synced_folder ".", "/vagrant"
+      # Script for installation into manager
+      manager.vm.provision "shell", path: "config/docker/install_docker", privileged: true
+      manager.vm.provision "shell", path: "config/docker/manager_init", privileged: true
+      # Script for installation prometheus and grafana
+      manager.vm.provision "shell", inline: $script, privileged: true
+      manager.vm.provider "virtualbox" do |vb|
+        vb.name = "manager"
+        vb.memory = "1024"
+      end
+    end
+  (1..2).each do |i|
+      config.vm.define "worker0#{i}" do |worker|
+        worker.vm.box = vm_box
+        worker.vm.box_check_update = true
+        worker.vm.network :private_network, ip: "10.100.199.20#{i}"
+        worker.vm.hostname = "worker0#{i}"
+        worker.vm.synced_folder ".", "/vagrant"
+        worker.vm.provision "shell", path: "config/docker/install_docker", privileged: true
+        worker.vm.provision "shell", path: "config/docker/worker_init", privileged: true
+        worker.vm.provider "virtualbox" do |vb|
+          vb.name = "worker0#{i}"
+          vb.memory = "1024"
+        end
+      end
+    end
+  end

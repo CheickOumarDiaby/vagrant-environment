@@ -1,0 +1,4 @@
+# Vagrant directory
+.vagrant/
+*.log
+worker_token

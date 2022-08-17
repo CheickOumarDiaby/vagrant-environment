@@ -2,7 +2,7 @@
   <content><![CDATA[
 # ${1:DevOps Tools Installation for Lab}
 
-This project consists of installing devosp tools for test environment to train you on the use of this tool or either to make an environment close to that of production
+This project consists of installing devops tools for test environment to train you on the use of this tool or either to make an environment close to that of production
 
 ## Prerequisite
 

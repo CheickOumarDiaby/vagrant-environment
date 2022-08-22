@@ -20,7 +20,7 @@ Download source code with git or any method
 ```
 Choose your project (example jenkins) and run your installtion
 ```
-    cd jenkins/ && vagrant up --provision
+    cd Jenkins/ && vagrant up --provision
 ```
 Find the ip address and the initiating password at the end of the `vagrant up --provision` command output
 
